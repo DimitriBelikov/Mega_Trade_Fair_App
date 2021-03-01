@@ -8,7 +8,7 @@ class servicesdb:
         self.create_table()
     
     def connect_database(self):
-        self.connector = mysql.connect(host='127.0.0.1', user='root', password='Urmil@2000')
+        self.connector = mysql.connect(host='127.0.0.1', user='root', password='tmkoc830')
 
         self.dbcursor = self.connector.cursor()
         self.dbcursor.execute('CREATE DATABASE IF NOT EXISTS MegaTradeFair')
@@ -152,6 +152,7 @@ class servicesdb:
                 table_data += f'{x})'
 
         add_query = (f'INSERT INTO {table_name} ' + table_data + table_values)
+        print(add_query)
 
         #Execute Query
         try:
@@ -166,3 +167,7 @@ class servicesdb:
         self.dbcursor.execute(select_query)
         records = self.dbcursor.fetchall()
         return records
+
+
+
+

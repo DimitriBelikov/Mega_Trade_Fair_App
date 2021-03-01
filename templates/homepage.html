@@ -7,31 +7,33 @@
     </head>
     <body>
         <nav class="topnav">
-            <a class = "active" href="#home">Home</a>
+            <a class = "active" href="/">Home</a>
             <nav class="dropdown">
                 <button class="dropbtn">Add</button>
                 <nav class="dropdown-content">
-                    <a href="#">Event</a>
-                    <a href="#">Venue</a>
-                    <a href="#">Stall</a>
-                    <a href="#">Visitor</a>
-                    <a href="#">Exhibitor</a>
-                    <a href="#">Country</a>
-                    <a href="#">State</a>
-                    <a href="#">Industry</a>
+                    <a href="{{url_for('add_event')}}">Event</a>
+                    <a href="{{url_for('add_venue')}}">Venue</a>
+                    <a href="{{url_for('add_stall')}}">Stall</a>
+                    <a href="{{url_for('add_visitor')}}">Visitor</a>
+                    <a href="{{url_for('add_exhibitor')}}">Exhibitor</a>
+                    <a href="{{url_for('add_country')}}">Country</a>
+                    <a href="{{url_for('add_state')}}">State</a>
+                    <a href="{{url_for('add_industry')}}">Industry</a>
+                    <a href="{{url_for('consumer_card')}}">Mega Consumer Card</a>
                 </nav>
             </nav>
             <nav class="dropdown">
                 <button class="dropbtn">Display</button>
                 <nav class="dropdown-content">
-                    <a href="#">Event</a>
-                    <a href="#">Venue</a>
-                    <a href="#">Stall</a>
-                    <a href="#">Visitor</a>
-                    <a href="#">Exhibitor</a>
-                    <a href="#">Country</a>
-                    <a href="#">State</a>
-                    <a href="#">Industry</a>
+                    <a href="{{url_for('display', title = 'Event')}}">Event</a>
+                    <a href="{{url_for('display', title = 'Venue')}}">Venue</a>
+                    <a href="{{url_for('display', title = 'Stall')}}">Stall</a>
+                    <a href="{{url_for('display', title = 'Visitor')}}">Visitor</a>
+                    <a href="{{url_for('display', title = 'Exhibitor')}}">Exhibitor</a>
+                    <a href="{{url_for('display', title = 'Country')}}">Country</a>
+                    <a href="{{url_for('display', title = 'State')}}">State</a>
+                    <a href="{{url_for('display', title = 'Industry')}}">Industry</a>
+                    <a href="{{url_for('display', title = 'ConsumerCard')}}">Mega Consumer Card</a>
                 </nav>
             </nav>
         </nav>
