@@ -11,19 +11,20 @@ class servicesdb:
         self.connector = mysql.connect(host='127.0.0.1', user='root', password='Urmil@2000')
 
         self.dbcursor = self.connector.cursor()
-        self.dbcursor.execute('CREATE DATABASE IF NOT EXISTS MegaTradeFair')
-        self.dbcursor.execute('USE MegaTradeFair')
+        #self.dbcursor.execute('CREATE DATABASE IF NOT EXISTS MegaTradeFair')
+        #self.dbcursor.execute('USE MegaTradeFair')
+        self.dbcursor.execute('USE test')
 
     def create_table(self):
         self.dbcursor.execute(''' CREATE TABLE IF NOT EXISTS Country(
         Id INT NOT NULL AUTO_INCREMENT,
-        Country_name VARCHAR(30),
+        CountryName VARCHAR(30),
         PRIMARY KEY (id)
         );''')
 
         self.dbcursor.execute('''CREATE TABLE IF NOT EXISTS State(
             Id INT NOT NULL AUTO_INCREMENT,
-            State_name VARCHAR(30),
+            StateName VARCHAR(30),
             Country_id INT,
             PRIMARY KEY (id),
             FOREIGN KEY (country_id) REFERENCES Country(id) ON UPDATE CASCADE
@@ -31,7 +32,7 @@ class servicesdb:
 
         self.dbcursor.execute('''CREATE TABLE if NOT EXISTS Industry(
             Id INT NOT NULL AUTO_INCREMENT,
-            Industry_name VARCHAR(40),
+            IndustryName VARCHAR(40),
             PRIMARY KEY (id)
         ); ''')
 
@@ -152,6 +153,7 @@ class servicesdb:
                 table_data += f'{x})'
 
         add_query = (f'INSERT INTO {table_name} ' + table_data + table_values)
+        print(add_query)
 
         #Execute Query
         try:
@@ -166,3 +168,61 @@ class servicesdb:
         self.dbcursor.execute(select_query)
         records = self.dbcursor.fetchall()
         return records
+
+    def retrieve_industry_bookings(self):
+        industry_query = ('SELECT Industry_Name FROM Industry')
+        self.dbcursor.execute(industry_query)
+        industries = self.dbcursor.fetchall()
+        
+        records = []
+        for industry in industries:
+            industry_booking_query = ('SELECT * FROM Booking WHERE IndustryName = %(IndustryName)s')
+            self.dbcursor.execute(industry_booking_query, {'IndustryName': industry})
+            records.append(self.dbcursor.fetchall())
+        
+        return records
+
+    def retrieve_industry_wise_business(self):
+        industry_query = ('SELECT Industry_Name FROM Industry')
+        self.dbcursor.execute(industry_query)
+        industries = self.dbcursor.fetchall()
+
+        industry_business_records, industry_business_total = {}
+        for industry in industries:
+            business_query = ('''SELECT t1.Id, t1.Spend, t1.SpendDate,  t4.Id
+                            FROM megaconusmercard AS t1
+                            JOIN booking AS t2 ON t2.Id = t1.Booking_Id
+                            JOIN exhibitor AS t3 ON t3.Industry_Id = t2.Exhibitor_Id
+                            JOIN industry AS t4 ON  t4.Id = t3.Industry_Id,
+                            WHERE t4.IndustryName = %(IndustryName)s''')
+            
+            self.dbcursor.execute(business_query,{'IndustryName': industry})
+            industry_business_records[industry] = self.dbcursor.fetchall()
+
+            total_business = 0
+            for x in industry_business_records[industry]:
+                total_business += x(1)
+            industry_business_total[industry] = total_business
+        
+        return (industry_business_records, industry_business_total)
+
+    def update_record(self, table_name, Id, updated_data):
+        set_values = ''
+
+        for i, columns in enumerate(updated_data.keys()):
+            if i != len(updated_data.keys())-1:
+                set_values += f'{columns} = %({columns})s,'
+            else:
+                set_values += f'{columns} = %({columns})s WHERE Id = %(Id)s'
+        
+        updated_data['Id'] = Id
+        update_query = (f'UPDATE {table_name} SET '+ set_values)
+        try:
+            self.dbcursor.execute(update_query, updated_data)
+            self.connector.commit()
+        except Exception as e:
+            print(' *** Updation Failed *** \n', e)
+
+k = servicesdb()
+random = 'Australia'
+k.add_record('Country', {'CountryName':random})
