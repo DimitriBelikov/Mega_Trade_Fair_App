@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Homepage</title>
+        <link rel="stylesheet" type="text/css" href="../static/css/layout.css">
+    </head>
+    <body>
+        <nav class="topnav">
+            <a class = "active" href="/">Home</a>
+            <nav class="dropdown">
+                <button class="dropbtn">Add</button>
+                <nav class="dropdown-content">
+                    <a href="{{url_for('add_event')}}">Event</a>
+                    <a href="{{url_for('add_venue')}}">Venue</a>
+                    <a href="{{url_for('add_stall')}}">Stall</a>
+                    <a href="{{url_for('add_visitor')}}">Visitor</a>
+                    <a href="{{url_for('add_exhibitor')}}">Exhibitor</a>
+                    <a href="{{url_for('add_country')}}">Country</a>
+                    <a href="{{url_for('add_state')}}">State</a>
+                    <a href="{{url_for('add_industry')}}">Industry</a>
+                    <a href="{{url_for('consumer_card')}}">Mega Consumer Card</a>
+                </nav>
+            </nav>
+            <nav class="dropdown">
+                <button class="dropbtn">Display</button>
+                <nav class="dropdown-content">
+                    <a href="{{url_for('display', title = 'Event')}}">Event</a>
+                    <a href="{{url_for('display', title = 'Venue')}}">Venue</a>
+                    <a href="{{url_for('display', title = 'Stall')}}">Stall</a>
+                    <a href="{{url_for('display', title = 'Visitor')}}">Visitor</a>
+                    <a href="{{url_for('display', title = 'Exhibitor')}}">Exhibitor</a>
+                    <a href="{{url_for('display', title = 'Country')}}">Country</a>
+                    <a href="{{url_for('display', title = 'State')}}">State</a>
+                    <a href="{{url_for('display', title = 'Industry')}}">Industry</a>
+                    <a href="{{url_for('display', title = 'ConsumerCard')}}">Mega Consumer Card</a>
+                </nav>
+            </nav>
+        </nav>
+        <h1>Mega Trade Fair App</h1>
+        <h2>Welcome to Mega Trade Fair app for the Spring fest</h2>
+        <p class="about"><b>Spring Fest, known as SF, is the annual social and cultural festival of the Indian Institute of Technology, Kharagpur 
+            held during January in the spring semester. The 60th edition of Spring Fest was 
+            held from January 24 to 27, 2019.The first edition of Spring Fest was held in 1960, 
+            which makes it one of the oldest college fests in India. It was conceived as a platform for the students 
+            of IIT Kharagpur to showcase their extra academic skills. Over the years, it began to attract participants 
+            from the neighboring colleges of West Bengal. In the last decade or so, the fest grew in scale, attracting participants 
+            from all over India and as well as abroad. The 2019 edition of the fest received a footfall of over 80,000 people.</b></p>
+        <div>
+            <a class="button" href="#">New Booking</a>
+            <a class="button" href="#">Analytics</a>
+        </div>
+        <footer>
+            <p>Developed by: Urmil, Samved and Piyush</p>
+            <p>For more about Spring fest visit <a href="https://springfest.in/">springfest.in</a></p>
+        </footer>
+    </body>
+</html>

@@ -222,7 +222,3 @@ class servicesdb:
             self.connector.commit()
         except Exception as e:
             print(' *** Updation Failed *** \n', e)
-
-k = servicesdb()
-random = 'Australia'
-k.add_record('Country', {'CountryName':random})
