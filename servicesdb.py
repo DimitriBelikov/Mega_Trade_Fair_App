@@ -12,8 +12,8 @@ class servicesdb:
 
         self.dbcursor = self.connector.cursor()
         #self.dbcursor.execute('CREATE DATABASE IF NOT EXISTS MegaTradeFair')
-        #self.dbcursor.execute('USE MegaTradeFair')
-        self.dbcursor.execute('USE test')
+        self.dbcursor.execute('USE MegaTradeFair')
+        #self.dbcursor.execute('USE test')
 
     def create_table(self):
         self.dbcursor.execute(''' CREATE TABLE IF NOT EXISTS Country(
@@ -217,8 +217,12 @@ class servicesdb:
         
         updated_data['Id'] = Id
         update_query = (f'UPDATE {table_name} SET '+ set_values)
+        print(update_query)
         try:
             self.dbcursor.execute(update_query, updated_data)
             self.connector.commit()
         except Exception as e:
             print(' *** Updation Failed *** \n', e)
+
+
+

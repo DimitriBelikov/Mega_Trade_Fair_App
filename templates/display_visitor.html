@@ -91,7 +91,7 @@
               <td><b>{{ row[7] }}</b></td>
               <td><b>{{ row[8] }}</b></td>
               <td>
-                  <a href= "#" class="btn btn-outline-success" role="button">Edit</a>
+                  <a href= "{{ url_for('update_get',title='Visitor',ID=row[0]) }}" class="btn btn-outline-success" role="button">Edit</a>
                                                                               
               </td>
               <td>

@@ -77,7 +77,7 @@
               <th scope="row">{{row[0]}}</th>
               <td><b>{{ row[1] }}</b></td>
               <td>
-                  <a href= "#" class="btn btn-outline-success" role="button">Edit</a>
+                  <a href= "{{ url_for('update_get',title='Country',ID=row[0]) }}" class="btn btn-outline-success" role="button">Edit</a>
                                                                               
               </td>
               <td>
