@@ -1,0 +1,148 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookings</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  </head>
+
+  <style>
+    .topnav {
+    overflow: hidden;
+    background-color: #333;
+    }
+
+    .topnav a {
+      float: left;
+      color: #f2f2f2;
+      border-right: 1px solid #f2f2f2;
+      border-left: 1px solid #f2f2f2;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      font-size: 17px;
+    }
+
+    .topnav a:hover {
+        background-color: #ddd;
+        color: black;
+    }
+
+    .topnav a.active {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .col-md-4 col-md-offset-4{
+      text-align:center;
+    }
+    form{
+      border:4px solid black;
+      padding:10px 10px 10px 10px;
+      background-color: black;
+    }
+    form label{
+      text-align:left;
+      color:white;
+    }
+    body{
+      background-color:whitesmoke;
+    }
+    h2{
+      color:black;
+    }
+    table {
+      border-spacing: 15px;
+    }
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    .stretch{
+      width: 70%;
+    }
+    </style>
+
+<body>
+  <nav class="topnav">
+  <a class = "active" href="/">Home</a>
+  </nav>
+
+  <center>
+    <div class="col-md-4 col-md-offset-4">
+      <h2>Book Stalls Here !!!</h2>
+      <form method="POST" action="{{ url_for('add_booking') }}" id="bookings">
+
+        <div class="mb-3">
+          <table>
+            <tr>
+              <td>
+                <label for="ExhibitorName">Exhibitor</label>
+              </td>
+              <td>
+                <select class='select-box stretch' form="bookings" name="exhibitor">
+                  {% for exhibitor in Exhibitors %}
+                    <option value="{{ exhibitor[0] }}"> {{ exhibitor[1] }} </option>
+                  {% endfor %}
+                </select>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <label for="EventName">Event Name</label>
+              </td>
+              <td>
+                <select class='select-box stretch' form="bookings" name="event">
+                  {% for event in Events %}
+                    <option value="{{ event[0] }}"> {{ event[1] }} </option>
+                  {% endfor %}
+                </select>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <label for="stallid">Stall Id</label>
+              </td>
+              <td>
+                <select class='select-box stretch' form="bookings" name="stall">
+                  {% for stall in Stalls %}
+                    <option value="{{ stall[0] }}"> {{ stall[1] }}, Event ID: {{ stall[2] }} </option>
+                  {% endfor %}
+                </select>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <label for="Price">Price</label>
+              </td>
+              <td>
+                <input type="integer" class="form-control" id="exampleInputEmailexampleInputEmail1" name="price" placeholder="Enter Price">
+              </td>
+            </tr>
+          </table>
+          <small id="emailHelp" class="form-text text-muted"></small>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add</button>
+      </form>
+      
+      {% with messages = get_flashed_messages() %}  
+        {% if messages %}  
+          {% for message in messages %}  
+            <h3 style="text-align: center; color: green;">{{ message }}</h3>
+            <a href="{{url_for('display', title = 'Exhibitor')}}">See the updated Bookings Database....</a>  
+          {% endfor %}  
+        {% endif %}  
+      {% endwith %} 
+       
+    </div>
+  </center>
+  </body>
+</html>
