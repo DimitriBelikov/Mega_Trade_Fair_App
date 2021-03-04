@@ -217,6 +217,7 @@ class servicesdb:
         
         updated_data['Id'] = Id
         update_query = (f'UPDATE {table_name} SET '+ set_values)
+        print(update_query)
         try:
             self.dbcursor.execute(update_query, updated_data)
             self.connector.commit()
