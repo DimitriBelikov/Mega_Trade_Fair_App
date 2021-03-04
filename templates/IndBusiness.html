@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Industry wise Business</title>
+        <link rel="stylesheet" type="text/css" href="../static/css/anlytic_css.css">
+    </head>
+    <body>
+        <nav class="topnav">
+            <a class = "active" href="/">Home</a>
+            <nav class="dropdown">
+                <button class="dropbtn">Add</button>
+                <nav class="dropdown-content">
+                    <a href="{{url_for('add_event')}}">Event</a>
+                    <a href="{{url_for('add_venue')}}">Venue</a>
+                    <a href="{{url_for('add_stall')}}">Stall</a>
+                    <a href="{{url_for('add_visitor')}}">Visitor</a>
+                    <a href="{{url_for('add_exhibitor')}}">Exhibitor</a>
+                    <a href="{{url_for('add_country')}}">Country</a>
+                    <a href="{{url_for('add_state')}}">State</a>
+                    <a href="{{url_for('add_industry')}}">Industry</a>
+                    <a href="{{url_for('consumer_card')}}">Mega Consumer Card</a>
+                </nav>
+            </nav>
+            <nav class="dropdown">
+                <button class="dropbtn">Display</button>
+                <nav class="dropdown-content">
+                    <a href="{{url_for('display', title = 'Event')}}">Event</a>
+                    <a href="{{url_for('display', title = 'Venue')}}">Venue</a>
+                    <a href="{{url_for('display', title = 'Stall')}}">Stall</a>
+                    <a href="{{url_for('display', title = 'Visitor')}}">Visitor</a>
+                    <a href="{{url_for('display', title = 'Exhibitor')}}">Exhibitor</a>
+                    <a href="{{url_for('display', title = 'Country')}}">Country</a>
+                    <a href="{{url_for('display', title = 'State')}}">State</a>
+                    <a href="{{url_for('display', title = 'Industry')}}">Industry</a>
+                    <a href="{{url_for('display', title = 'megaconsumercard')}}">Mega Consumer Card</a>
+                </nav>
+            </nav>
+        </nav>
+        <h1>Industry Wise Business Done</h1>
+        <div class="dropdown" id="industry">
+            <button class="dropbtn">Choose Industry</button>
+            <div class="dropdown-content">
+                <a href="#">Industry1</a>
+                <a href="#">Industry2</a>
+                <a href="#">Industry3</a>
+                <a href="#">Industry4</a>
+                <a href="#">Industry5</a>
+                <a href="#">Industry5</a>
+                <a href="#">Industry7</a>
+                <a href="#">Industry8</a>
+            </div>
+        </div>
+    </body>
+</html>

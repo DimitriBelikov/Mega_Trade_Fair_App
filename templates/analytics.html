@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Analytics</title>
+        <link rel="stylesheet" type="text/css" href="../static/css/anlytic_css.css">
+    </head>
+    <body>
+        <nav class="topnav">
+            <a class = "active" href="/">Home</a>
+            <nav class="dropdown">
+                <button class="dropbtn">Add</button>
+                <nav class="dropdown-content">
+                    <a href="{{url_for('add_event')}}">Event</a>
+                    <a href="{{url_for('add_venue')}}">Venue</a>
+                    <a href="{{url_for('add_stall')}}">Stall</a>
+                    <a href="{{url_for('add_visitor')}}">Visitor</a>
+                    <a href="{{url_for('add_exhibitor')}}">Exhibitor</a>
+                    <a href="{{url_for('add_country')}}">Country</a>
+                    <a href="{{url_for('add_state')}}">State</a>
+                    <a href="{{url_for('add_industry')}}">Industry</a>
+                    <a href="{{url_for('consumer_card')}}">Mega Consumer Card</a>
+                </nav>
+            </nav>
+            <nav class="dropdown">
+                <button class="dropbtn">Display</button>
+                <nav class="dropdown-content">
+                    <a href="{{url_for('display', title = 'Event')}}">Event</a>
+                    <a href="{{url_for('display', title = 'Venue')}}">Venue</a>
+                    <a href="{{url_for('display', title = 'Stall')}}">Stall</a>
+                    <a href="{{url_for('display', title = 'Visitor')}}">Visitor</a>
+                    <a href="{{url_for('display', title = 'Exhibitor')}}">Exhibitor</a>
+                    <a href="{{url_for('display', title = 'Country')}}">Country</a>
+                    <a href="{{url_for('display', title = 'State')}}">State</a>
+                    <a href="{{url_for('display', title = 'Industry')}}">Industry</a>
+                    <a href="{{url_for('display', title = 'megaconsumercard')}}">Mega Consumer Card</a>
+                </nav>
+            </nav>
+        </nav>
+        <h1>Analytics</h1>
+        <form action="">
+            <label for="atype">Type of Analysis : </label><br><br>
+            <select name="analysis" id="analysis">
+                <option value="booking">Industry wise Booking</option>
+                <option value="business">Industry wise Business done</option>
+            </select>
+            <br><br>
+            <input class = "submit" type="submit" value="Submit">
+        </form>
+    </body>
+</html>

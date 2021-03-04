@@ -1,0 +1,145 @@
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background:linear-gradient(#3a1c71, #d76d77, #ffaf7b);
+    background-position: center; 
+}
+
+.topnav {
+    overflow: hidden;
+    background-color: #333;
+}
+
+.topnav a {
+    float: left;
+    color: #f2f2f2;
+    border-right: 1px solid #f2f2f2;
+    border-left: 1px solid #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 22px;
+}
+
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.topnav a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.button:hover {
+    background-color: rgb(180, 180, 180);
+    color: black;
+}
+
+.dropdown {
+    float: left;
+    overflow: hidden;
+}
+  
+.dropdown .dropbtn {
+    font-size: 22px;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.topnav a:hover, .dropdown:hover .dropbtn {
+    background-color: #555;
+    color: white;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+h1 {
+    text-align: center;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size:300%;
+    font-weight: bold;
+    color: #221c1c;
+    border: 8px solid white;
+    border-style: groove;
+    border-radius: 16px;
+    padding: 2%;
+    width: 50%;
+    margin: auto;
+    margin-top: 4%;
+}
+
+form {
+    text-align: center;
+    font-size: larger;
+    width: 40%;
+    margin: 25%;
+    margin-top: 5%;
+    margin-bottom: 7%;
+    padding: 5%;
+    border: 5px solid whitesmoke;
+}
+
+form label {
+    font-size: xx-large;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+}
+form select, input {
+    font-size: x-large;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.submit:hover {
+    background-color: #333;
+    color: #f2f2f2;
+}
+
+#industry{
+    text-align: center;
+    background-color: #4CAF50;
+    font-size: larger;
+    width:12%;
+    margin:10% 44%;
+    margin-bottom: 15%;
+    border: 1px solid black;
+}
+
+#industry.dropdown:hover .dropdown-content {
+    display: block;
+    height: 25%;
+    overflow-y: scroll;
+}
+
+
+
