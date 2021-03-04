@@ -12,50 +12,50 @@ class servicesdb:
 
         self.dbcursor = self.connector.cursor()
         #self.dbcursor.execute('CREATE DATABASE IF NOT EXISTS MegaTradeFair')
-        self.dbcursor.execute('USE MegaTradeFair')
-        #self.dbcursor.execute('USE test')
+        #self.dbcursor.execute('USE MegaTradeFair')
+        self.dbcursor.execute('USE test')
 
     def create_table(self):
         self.dbcursor.execute(''' CREATE TABLE IF NOT EXISTS Country(
         Id INT NOT NULL AUTO_INCREMENT,
-        CountryName VARCHAR(30),
+        CountryName VARCHAR(200),
         PRIMARY KEY (id)
         );''')
 
         self.dbcursor.execute('''CREATE TABLE IF NOT EXISTS State(
             Id INT NOT NULL AUTO_INCREMENT,
-            StateName VARCHAR(30),
+            StateName VARCHAR(200),
             Country_id INT,
             PRIMARY KEY (id),
-            FOREIGN KEY (country_id) REFERENCES Country(id) ON UPDATE CASCADE
+            FOREIGN KEY (country_id) REFERENCES Country(id) ON UPDATE CASCADE ON DELETE CASCADE
         ); ''')
 
         self.dbcursor.execute('''CREATE TABLE if NOT EXISTS Industry(
             Id INT NOT NULL AUTO_INCREMENT,
-            IndustryName VARCHAR(40),
+            IndustryName VARCHAR(200),
             PRIMARY KEY (id)
         ); ''')
 
         self.dbcursor.execute('''CREATE TABLE if NOT EXISTS Venue(
             Id INT NOT NULL AUTO_INCREMENT,
-            City VARCHAR(40),
+            City VARCHAR(200),
             Address VARCHAR(200),
             Country_id INT,
             State_id INT,
             PRIMARY KEY (Id),
-            FOREIGN KEY (Country_id) REFERENCES Country(Id) ON UPDATE CASCADE,
-            FOREIGN KEY (State_id) REFERENCES State(Id) ON UPDATE CASCADE
+            FOREIGN KEY (Country_id) REFERENCES Country(Id) ON UPDATE CASCADE ON DELETE CASCADE,
+            FOREIGN KEY (State_id) REFERENCES State(Id) ON UPDATE CASCADE ON DELETE CASCADE
         ); ''')
 
         self.dbcursor.execute('''CREATE TABLE if NOT EXISTS Event(
             Id INT NOT NULL AUTO_INCREMENT,
-            Name VARCHAR(50),
+            Name VARCHAR(200),
             BookingStartDate DATETIME NOT NULL,
             StartDate DATETIME NOT NULL,
             EndDate DATETIME NOT NULL,
             Venue_Id INT,
             PRIMARY KEY (Id),
-            FOREIGN KEY (Venue_Id) REFERENCES Venue(Id) ON UPDATE CASCADE
+            FOREIGN KEY (Venue_Id) REFERENCES Venue(Id) ON UPDATE CASCADE ON DELETE CASCADE
         ); ''')
 
         self.dbcursor.execute('''CREATE TABLE if NOT EXISTS Stall(
@@ -66,17 +66,17 @@ class servicesdb:
             IsBooked BIT NOT NULL,
             Event_Id INT,
             PRIMARY KEY (Id),
-            FOREIGN KEY (Event_Id) REFERENCES Event(Id)
+            FOREIGN KEY (Event_Id) REFERENCES Event(Id) ON DELETE CASCADE ON UPDATE CASCADE
         ); ''')
 
         self.dbcursor.execute('''CREATE TABLE if NOT EXISTS Visitor(
             Id INT NOT NULL AUTO_INCREMENT,
-            FirstName VARCHAR(20),
-            LastName VARCHAR(20),
+            FirstName VARCHAR(30),
+            LastName VARCHAR(30),
             Address VARCHAR(200),
             Pincode INT NOT NULL,
             MobileNo VARCHAR(10) NOT NULL,
-            EmailId VARCHAR(40) NOT NULL,
+            EmailId VARCHAR(100) NOT NULL,
             DateOfBirth DATETIME,
             Gender BIT NOT NULL,
             PRIMARY KEY (Id)
@@ -84,20 +84,20 @@ class servicesdb:
 
         self.dbcursor.execute('''CREATE TABLE if NOT EXISTS Exhibitor(
             Id INT NOT NULL AUTO_INCREMENT,
-            Name VARCHAR(30),
-            EmailId VARCHAR(40),
+            ExhibitorName VARCHAR(30),
+            EmailId VARCHAR(100),
             PhoneNo VARCHAR(10),
-            CompanyName VARCHAR(20),
-            CompanyDescription VARCHAR(50),
+            CompanyName VARCHAR(200),
+            CompanyDescription VARCHAR(300),
             Address VARCHAR(200),
             Pincode INT NOT NULL,
             Industry_Id INT,
             Country_Id INT,
             State_Id INT,
             PRIMARY KEY (Id),
-            FOREIGN KEY (Industry_Id) REFERENCES Industry(Id) ON UPDATE CASCADE,
-            FOREIGN KEY (Country_Id) REFERENCES Country(Id) ON UPDATE CASCADE,
-            FOREIGN KEY (State_Id) REFERENCES State(Id) ON UPDATE CASCADE
+            FOREIGN KEY (Industry_Id) REFERENCES Industry(Id) ON UPDATE CASCADE ON DELETE CASCADE,
+            FOREIGN KEY (Country_Id) REFERENCES Country(Id) ON UPDATE CASCADE ON DELETE CASCADE,
+            FOREIGN KEY (State_Id) REFERENCES State(Id) ON UPDATE CASCADE ON DELETE CASCADE
         ); ''')
 
         self.dbcursor.execute('''CREATE TABLE if NOT EXISTS Booking(
@@ -107,8 +107,8 @@ class servicesdb:
             Event_Id INT,
             Exhibitor_Id INT,
             PRIMARY KEY (Id),
-            FOREIGN KEY (Event_Id) REFERENCES Event(Id) ON UPDATE CASCADE,
-            FOREIGN KEY (Exhibitor_Id) REFERENCES Exhibitor(Id) ON UPDATE CASCADE
+            FOREIGN KEY (Event_Id) REFERENCES Event(Id) ON UPDATE CASCADE ON DELETE CASCADE,
+            FOREIGN KEY (Exhibitor_Id) REFERENCES Exhibitor(Id) ON UPDATE CASCADE ON DELETE CASCADE
         ); ''')
 
         self.dbcursor.execute('''CREATE TABLE if NOT EXISTS BookingStallMap(
@@ -117,24 +117,24 @@ class servicesdb:
             Event_Id INT,
             Stall_Id INT,
             PRIMARY KEY (Id),
-            FOREIGN KEY (Event_Id) REFERENCES Event(Id) ON UPDATE CASCADE,
-            FOREIGN KEY (Stall_Id) REFERENCES Stall(Id) ON UPDATE CASCADE,
-            FOREIGN KEY (Booking_Id) REFERENCES Booking(Id) ON UPDATE CASCADE
+            FOREIGN KEY (Event_Id) REFERENCES Event(Id) ON UPDATE CASCADE ON DELETE CASCADE,
+            FOREIGN KEY (Stall_Id) REFERENCES Stall(Id) ON UPDATE CASCADE ON DELETE CASCADE,
+            FOREIGN KEY (Booking_Id) REFERENCES Booking(Id) ON UPDATE CASCADE ON DELETE CASCADE
         ); ''')
 
         self.dbcursor.execute('''CREATE TABLE if NOT EXISTS MegaConusmerCard(
             Id INT NOT NULL AUTO_INCREMENT,
             Spend INT NOT NULL,
             SpendDate DATETIME NOT NULL,
-            PaymentMode VARCHAR(15),
+            PaymentMode VARCHAR(200),
             
             Event_Id INT,
             Booking_Id INT,
             Visitor_Id INT,
             PRIMARY KEY (Id),
-            FOREIGN KEY (Event_Id) REFERENCES Event(Id) ON UPDATE CASCADE,
-            FOREIGN KEY (Booking_Id) REFERENCES Booking(Id) ON UPDATE CASCADE,
-            FOREIGN KEY (Visitor_Id) REFERENCES Visitor(Id) ON UPDATE CASCADE	
+            FOREIGN KEY (Event_Id) REFERENCES Event(Id) ON UPDATE CASCADE ON DELETE CASCADE,
+            FOREIGN KEY (Booking_Id) REFERENCES Booking(Id) ON UPDATE CASCADE ON DELETE CASCADE,
+            FOREIGN KEY (Visitor_Id) REFERENCES Visitor(Id) ON UPDATE CASCADE ON DELETE CASCADE	
         );''')
 
         self.connector.commit()
@@ -224,5 +224,29 @@ class servicesdb:
         except Exception as e:
             print(' *** Updation Failed *** \n', e)
 
+    def fetch_column_data(self, table_name, columns, condition_name=None, condition_value=None):
+        fetch_query = 'SELECT '
 
+        for i,column in enumerate(columns):
+            if i < len(columns)-1:
+                fetch_query += f'{column}, '
+            else:
+                fetch_query += f'{column} FROM {table_name}'
+        
+        if condition_name != None and condition_value != None:
+            fetch_query += f' WHERE {condition_name} = %(condition_value)s'
+            print(fetch_query)
+            self.dbcursor.execute(fetch_query, {'condition_value': condition_value})
+        else:
+            self.dbcursor.execute(fetch_query)
+        columns_data = self.dbcursor.fetchall()
+
+        return columns_data
+
+    def get_last_insert_id(self):
+        count_query = (f'SELECT last_insert_id()')
+        
+        self.dbcursor.execute(count_query)
+        no_records = self.dbcursor.fetchone()
+        return no_records[0]
 

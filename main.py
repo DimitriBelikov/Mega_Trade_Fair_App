@@ -1,11 +1,13 @@
-from flask import Flask, render_template,request, url_for
+from flask import Flask, render_template,request, url_for, redirect, flash
 from servicesdb import servicesdb
+from datetime import datetime
+
 app = Flask(__name__)
+app.secret_key = "super secret key"
 
 db = servicesdb()
-db.connect_database()
-db.create_table()
-
+# db.connect_database()
+# db.create_table()
 
 @app.route('/')
 def homepage():
@@ -70,7 +72,7 @@ def add_exhibitor():
         industry_id = request.form.get('industry_id')
         country_id = request.form.get('country_id')
         state_id = request.form.get('state_id')
-        data = {'Name':name,'EmailId':email,'PhoneNo':phone,'CompanyName':company_name,'CompanyDescription':company_description,'Address':address,'Pincode':pin,'Industry_Id':industry_id,'Country_Id':country_id,'State_Id':state_id}
+        data = {'ExhibitorName':name,'EmailId':email,'PhoneNo':phone,'CompanyName':company_name,'CompanyDescription':company_description,'Address':address,'Pincode':pin,'Industry_Id':industry_id,'Country_Id':country_id,'State_Id':state_id}
         db.add_record(table, data)
         return render_template('add_exhibitor.html',text='New Exhibitor added!')
     return render_template('add_exhibitor.html')
@@ -166,7 +168,6 @@ def display(title):
         return render_template('display_industry.html',record=record)
 
 
-
 @app.route('/update/<title>/<int:ID>',methods=['GET'])
 def update_get(title,ID):
 
@@ -189,11 +190,6 @@ def update_get(title,ID):
     else:
         return render_template('update_industry.html', ID=ID)
 
-    
-
-
-
-    
 @app.route('/update/<title>',methods=['POST'])
 def update(title):
     if title=='Venue':
@@ -297,5 +293,27 @@ def update(title):
         db.update_record(table,Id, {'Industry_name':name})
         return render_template('update_industry.html',text='Industry details updated!')
         
-    
+@app.route('/bookings')
+def bookings():
+    Events = db.fetch_column_data('Event', ['Id','Name'])
+    Exhibitors = db.fetch_column_data('Exhibitor', ['Id','ExhibitorName'])
+    Stalls = db.fetch_column_data('Stall', ['Id','StallNo','Event_Id'], condition_name='IsBooked', condition_value=0)
+    # Events = [(1,'hi',), (2, 'Hello',)]
+    # Exhibitors = [(1, 'Parth',), (2, 'Samved',)]
+    # Stalls = [(1,)]
+    return render_template('bookings.html', Events=Events, Exhibitors=Exhibitors, Stalls=Stalls)
 
+@app.route('/add_booking', methods=['POST'])
+def add_booking():
+    Event_Id = request.form.get('event')
+    Exhibitor_Id = request.form.get('exhibitor')
+    Stall_Id = request.form.get('stall')
+    TotalAmount = request.form.get('price')
+    BookingDate = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+    #print({'BookingDate': BookingDate, 'TotalAmount': TotalAmount, 'Event_Id': Event_Id, 'Exhibitor_Id': Exhibitor_Id})
+    db.add_record('Booking', {'BookingDate': BookingDate, 'TotalAmount': TotalAmount, 'Event_Id': Event_Id, 'Exhibitor_Id': Exhibitor_Id})
+    Booking_Id = db.get_last_insert_id()
+    db.add_record('BookingStallMap', {'Booking_Id': Booking_Id, 'Event_Id': Event_Id, 'Stall_Id': Stall_Id})
+    db.update_record('Stall', Id=Stall_Id, updated_data={'IsBooked': 1})
+    flash('DONE')
+    return redirect('/bookings')    
