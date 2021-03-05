@@ -122,7 +122,7 @@ class servicesdb:
             FOREIGN KEY (Booking_Id) REFERENCES Booking(Id) ON UPDATE CASCADE ON DELETE CASCADE
         ); ''')
 
-        self.dbcursor.execute('''CREATE TABLE if NOT EXISTS MegaConusmerCard(
+        self.dbcursor.execute('''CREATE TABLE if NOT EXISTS MegaConsumerCard(
             Id INT NOT NULL AUTO_INCREMENT,
             Spend INT NOT NULL,
             SpendDate DATETIME NOT NULL,
