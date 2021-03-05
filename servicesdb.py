@@ -122,7 +122,7 @@ class servicesdb:
             FOREIGN KEY (Booking_Id) REFERENCES Booking(Id) ON UPDATE CASCADE ON DELETE CASCADE
         ); ''')
 
-        self.dbcursor.execute('''CREATE TABLE if NOT EXISTS MegaConusmerCard(
+        self.dbcursor.execute('''CREATE TABLE if NOT EXISTS MegaConsumerCard(
             Id INT NOT NULL AUTO_INCREMENT,
             Spend INT NOT NULL,
             SpendDate DATETIME NOT NULL,
@@ -169,42 +169,43 @@ class servicesdb:
         records = self.dbcursor.fetchall()
         return records
 
-    def retrieve_industry_bookings(self):
-        industry_query = ('SELECT Industry_Name FROM Industry')
-        self.dbcursor.execute(industry_query)
-        industries = self.dbcursor.fetchall()
-        
+    def retrieve_industry_bookings(self, industry_name):
         records = []
-        for industry in industries:
-            industry_booking_query = ('SELECT * FROM Booking WHERE IndustryName = %(IndustryName)s')
-            self.dbcursor.execute(industry_booking_query, {'IndustryName': industry})
-            records.append(self.dbcursor.fetchall())
+        industry_booking_query = (''' SELECT t1.Event_Id, t2.ExhibitorName, t2.CompanyName, t3.IndustryName, t1.TotalAmount, t1.BookingDate
+                            FROM booking AS t1
+                            JOIN exhibitor AS t2 ON t1.Exhibitor_Id = t2.Id
+                            JOIN industry AS t3 ON t2.Industry_Id = t3.Id WHERE t3.IndustryName = %(IndustryName)s
+                            ORDER BY t1.Event_Id ASC ''')
+
+        self.dbcursor.execute(industry_booking_query, industry_name)
+        records = self.dbcursor.fetchall()
         
         return records
 
-    def retrieve_industry_wise_business(self):
-        industry_query = ('SELECT Industry_Name FROM Industry')
-        self.dbcursor.execute(industry_query)
-        industries = self.dbcursor.fetchall()
+    def retrieve_industry_wise_business(self, industry_name):
+        industry_business_records, industry_event_total = [], []
+        event_fetch = ('SELECT Id FROM EVENT')
+        self.dbcursor.execute(event_fetch)
+        event_ids = self.dbcursor.fetchall()
 
-        industry_business_records, industry_business_total = {}
-        for industry in industries:
-            business_query = ('''SELECT t1.Id, t1.Spend, t1.SpendDate,  t4.Id
-                            FROM megaconusmercard AS t1
+        for event_id in event_ids:
+            business_query = ('''SELECT t1.Spend
+                            FROM megaconsumercard AS t1
                             JOIN booking AS t2 ON t2.Id = t1.Booking_Id
                             JOIN exhibitor AS t3 ON t3.Industry_Id = t2.Exhibitor_Id
-                            JOIN industry AS t4 ON  t4.Id = t3.Industry_Id,
-                            WHERE t4.IndustryName = %(IndustryName)s''')
+                            JOIN industry AS t4 ON  t4.Id = t3.Industry_Id
+                            WHERE t4.IndustryName = %(IndustryName)s AND t1.Event_Id = %(Event_Id)s
+                            ORDER BY t1.Event_id ASC''')
             
-            self.dbcursor.execute(business_query,{'IndustryName': industry})
-            industry_business_records[industry] = self.dbcursor.fetchall()
+            self.dbcursor.execute(business_query,{'IndustryName': industry_name, 'Event_Id':event_id[0]})
+            industry_business_records = self.dbcursor.fetchall()
 
             total_business = 0
-            for x in industry_business_records[industry]:
-                total_business += x(1)
-            industry_business_total[industry] = total_business
-        
-        return (industry_business_records, industry_business_total)
+            for record in industry_business_records:
+                total_business += record[0]
+            industry_event_total.append([event_id[0], total_business])
+
+        return industry_event_total
 
     def update_record(self, table_name, Id, updated_data):
         set_values = ''
@@ -249,8 +250,3 @@ class servicesdb:
         self.dbcursor.execute(count_query)
         no_records = self.dbcursor.fetchone()
         return no_records[0]
-
-
-obj = servicesdb()
-output_data = obj.fetch_column_data('stall', ['Id','StallNo','Event_Id'], condition_name='IsBooked', condition_value=0)
-print(output_data)

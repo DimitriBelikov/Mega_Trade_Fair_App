@@ -38,9 +38,9 @@
             </nav>
         </nav>
         <h1>Analytics</h1>
-        <form action="{{ url_for('analytics') }}" method="POST">
+        <form action="{{ url_for('analytics') }}" method='POST'>
             <label for="atype">Type of Analysis : </label><br><br>
-            <select name="analysis" id="analysis" name="analysis">
+            <select name="analytics-type" id="analysis">
                 <option value="booking">Industry wise Booking</option>
                 <option value="business">Industry wise Business done</option>
             </select>
