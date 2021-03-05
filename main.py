@@ -296,8 +296,8 @@ def update(title):
 @app.route('/bookings')
 def bookings():
     Events = db.fetch_column_data('Event', ['Id','Name'])
-    Exhibitors = db.fetch_column_data('Exhibitor', ['Id','ExhibitorName'])
-    Stalls = db.fetch_column_data('Stall', ['Id','StallNo','Event_Id'], condition_name='IsBooked', condition_value=0)
+    Exhibitors = db.fetch_column_data('Exhibitor', ['Id','Name'])
+    Stalls = db.fetch_column_data('stall', ['Id','StallNo','Event_Id'], condition_name='IsBooked', condition_value=0)
     # Events = [(1,'hi',), (2, 'Hello',)]
     # Exhibitors = [(1, 'Parth',), (2, 'Samved',)]
     # Stalls = [(1,)]
@@ -317,3 +317,19 @@ def add_booking():
     db.update_record('Stall', Id=Stall_Id, updated_data={'IsBooked': 1})
     flash('DONE')
     return redirect('/bookings')    
+
+
+@app.route('/analytics',methods=['GET','POST'])
+def analytics():
+    options = db.fetch_column_data('Industry',['Id','Name'])
+    if request.method=='POST':
+        if request.form.get('analysis') == 'booking':
+            return render_template('IndBooking.html', options=options)
+        else:
+            return render_template('IndBusiness.html', options=options)
+
+    return render_template('analytics.html')
+
+
+    
+
