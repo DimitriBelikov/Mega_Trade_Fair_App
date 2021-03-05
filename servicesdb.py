@@ -12,7 +12,7 @@ class servicesdb:
 
         self.dbcursor = self.connector.cursor()
         #self.dbcursor.execute('CREATE DATABASE IF NOT EXISTS MegaTradeFair')
-        #self.dbcursor.execute('USE MegaTradeFair')
+        self.dbcursor.execute('USE MegaTradeFair')
         self.dbcursor.execute('USE test')
 
     def create_table(self):
