@@ -9,6 +9,12 @@ db = servicesdb()
 # db.connect_database()
 # db.create_table()
 
+def check_update_data(updated_data):
+    for key in list(updated_data.keys()):
+        if updated_data[key] in ['',' ']:
+            removed_value = updated_data.pop(key,'Key Not Found')
+    return updated_data
+
 @app.route('/')
 def homepage():
     return render_template('homepage.html')
@@ -199,7 +205,8 @@ def update(title):
         address = request.form.get('address')
         country_id = request.form.get('country_id')
         state_id = request.form.get('state_id')
-        db.update_record(table, id, {'City':city, 'Address':address, 'Country_id':country_id,'State_id':state_id})
+        updated_data = check_update_data({'City':city, 'Address':address, 'Country_id':country_id,'State_id':state_id})
+        db.update_record(table, id, updated_data)
         return render_template('update_venue.html',text='Following Venue updated!')
             
     elif title=='Event':
@@ -210,8 +217,9 @@ def update(title):
         event_date = request.form.get('event_date')
         end_date = request.form.get('end_date')
         venue_id = request.form.get('venue_id')
-        data = {'Name':name,'BookingStartDate':booking_date,'StartDate':event_date,'EndDate':end_date,'Venue_Id':venue_id}
-        db.update_record(table,id, data)
+        updated_data = check_update_data({'Name':name,'BookingStartDate':booking_date,'StartDate':event_date,'EndDate':end_date,
+                                        'Venue_Id':venue_id})
+        db.update_record(table,id, updated_data)
         return render_template('update_event.html',text='Following event updated!')
 
     elif title=='Stall':
@@ -222,8 +230,8 @@ def update(title):
         size = request.form.get('size')
         isbooked = request.form.get('isbooked')
         event_id = request.form.get('event_id')
-        data = {'StallNo':stall_no,'Price':price,'StallSize':size,'IsBooked':int(isbooked),'Event_id':event_id}
-        db.update_record(table,id, data)
+        updated_data = check_update_data({'StallNo':stall_no,'Price':price,'StallSize':size,'IsBooked':int(isbooked),'Event_id':event_id})
+        db.update_record(table,id, updated_data)
         return render_template('update_stall.html',text='Following stall updated!')
         
     elif title=='Visitor':
@@ -237,8 +245,9 @@ def update(title):
         email = request.form.get('email')
         DOB = request.form.get('DOB')
         gender = request.form.get('gender')
-        data = {'FirstName':fname,'LastName':lname,'Address':address,'Pincode':pin,'MobileNo':phone,'EmailId':email,'DateOfBirth':DOB,'Gender':int(gender)}
-        db.update_record(table,id, data)
+        updated_data = check_update_data({'FirstName':fname,'LastName':lname,'Address':address,'Pincode':pin,'MobileNo':phone,
+                                            'EmailId':email,'DateOfBirth':DOB,'Gender':int(gender)})
+        db.update_record(table,id, updated_data)
         return render_template('update_visitor.html',text='Following visitor details updated!')
 
     elif title =='Exhibitor':
@@ -254,8 +263,10 @@ def update(title):
         industry_id = request.form.get('industry_id')
         country_id = request.form.get('country_id')
         state_id = request.form.get('state_id')
-        data = {'Name':name,'EmailId':email,'PhoneNo':phone,'CompanyName':company_name,'CompanyDescription':company_description,'Address':address,'Pincode':pin,'Industry_Id':industry_id,'Country_Id':country_id,'State_Id':state_id}
-        db.update_record(table,id, data)
+        updated_data = check_update_data({'ExhibitorName':name,'EmailId':email,'PhoneNo':phone,'CompanyName':company_name,
+                            'CompanyDescription':company_description,'Address':address,'Pincode':pin,'Industry_Id':industry_id,
+                            'Country_Id':country_id, 'State_Id':state_id})
+        db.update_record(table,id, updated_data)
         return render_template('update_exhibitor.html',text='Following Exhibitor details updated!')
 
     elif title=='ConsumerCard':
@@ -267,14 +278,17 @@ def update(title):
         event_id = request.form.get('event_id')
         booking_id = request.form.get('booking_id')
         visitor_id = request.form.get('visitor_id')
-        data = {'Spend':spend,'SpendDate':spend_date,'PaymentMode':payment_mode,'Event_Id':event_id,'Booking_Id':booking_id,'Visitor_Id':visitor_id}
-        db.update_record(table,id, data)
+        updated_data = check_update_data({'Spend':spend,'SpendDate':spend_date,'PaymentMode':payment_mode,'Event_Id':event_id,
+                                'Booking_Id':booking_id,'Visitor_Id':visitor_id})
+        db.update_record(table,id, updated_data)
         return render_template('update_consumer_card.html',text='Consumer data updated!')
+
     elif title=='Country':
         table = 'Country'
         id = request.form.get('Id')
         name = request.form.get('name')
-        db.update_record(table,id, {'Country_name':name})
+        updated_data = check_update_data({'CountryName':name})
+        db.update_record(table,id, updated_data)
         return render_template('update_country.html',text='Country details updated!')
 
     elif title=='State':
@@ -282,15 +296,16 @@ def update(title):
         Id = request.form.get('Id')
         name = request.form.get('name')
         country_id = request.form.get('country_id')
-        data = {'State_name':name,'Country_id':country_id}
-        db.update_record(table,Id, data)
+        updated_data = check_update_data({'StateName':name,'Country_id':country_id})
+        db.update_record(table,Id, updated_data)
         return render_template('update_state.html',text='State details updated!')
 
     elif title=='Industry':
         table = 'Industry'
         Id = request.form.get('Id')
         name = request.form.get('name')
-        db.update_record(table,Id, {'Industry_name':name})
+        updated_data = check_update_data({'IndustryName':name})
+        db.update_record(table,Id, updated_data)
         return render_template('update_industry.html',text='Industry details updated!')
         
 @app.route('/bookings')
@@ -317,3 +332,18 @@ def add_booking():
     db.update_record('Stall', Id=Stall_Id, updated_data={'IsBooked': 1})
     flash('DONE')
     return redirect('/bookings')    
+
+@app.route('/analytics', methods=['GET','POST'])
+def analytics():
+    if request.method == 'GET':
+        return render_template('analytics.html')
+    else:
+        analysis_type = request.form.get('analytics-type')
+        return redirect('/analytics/'+ analysis_type)
+        
+@app.route('/analytics/<type>')
+def analytics_type(type):
+    if type == 'booking':
+        return render_template('IndBooking.html')
+    else:
+        return render_template('IndBusiness.html')
