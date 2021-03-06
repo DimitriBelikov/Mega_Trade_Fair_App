@@ -4,52 +4,108 @@
         <meta charset="utf-8">
         <title>Industry wise booking</title>
         <link rel="stylesheet" type="text/css" href="../static/css/anlytic_css.css">
-    </head>
-    <body>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    
+    <style>
+    
+      .topnav {
+          overflow: hidden;
+          background-color: #333;
+      }
+      
+      
+      .topnav a {
+          float: left;
+          color: #f2f2f2;
+          border-right: 1px solid #f2f2f2;
+          border-left: 1px solid #f2f2f2;
+          text-align: center;
+          padding: 14px 16px;
+          text-decoration: none;
+          font-size: 17px;
+      }
+      
+      .topnav a:hover {
+          background-color: #ddd;
+          color: black;
+      }
+      
+      .topnav a.active {
+          background-color: #4CAF50;
+          color: white;
+      }
+      
+    
+        table {
+        background-color: red;
+        width: 100%;
+        border-collapse: collapse;
+        border: 3px solid white;
+      }
+      
+      </style>
+      
+      </head>
+      <body>
+      
         <nav class="topnav">
-            <a class = "active" href="/">Home</a>
-            <nav class="dropdown">
-                <button class="dropbtn">Add</button>
-                <nav class="dropdown-content">
-                    <a href="{{url_for('add_event')}}">Event</a>
-                    <a href="{{url_for('add_venue')}}">Venue</a>
-                    <a href="{{url_for('add_stall')}}">Stall</a>
-                    <a href="{{url_for('add_visitor')}}">Visitor</a>
-                    <a href="{{url_for('add_exhibitor')}}">Exhibitor</a>
-                    <a href="{{url_for('add_country')}}">Country</a>
-                    <a href="{{url_for('add_state')}}">State</a>
-                    <a href="{{url_for('add_industry')}}">Industry</a>
-                    <a href="{{url_for('consumer_card')}}">Mega Consumer Card</a>
-                </nav>
-            </nav>
-            <nav class="dropdown">
-                <button class="dropbtn">Display</button>
-                <nav class="dropdown-content">
-                    <a href="{{url_for('display', title = 'Event')}}">Event</a>
-                    <a href="{{url_for('display', title = 'Venue')}}">Venue</a>
-                    <a href="{{url_for('display', title = 'Stall')}}">Stall</a>
-                    <a href="{{url_for('display', title = 'Visitor')}}">Visitor</a>
-                    <a href="{{url_for('display', title = 'Exhibitor')}}">Exhibitor</a>
-                    <a href="{{url_for('display', title = 'Country')}}">Country</a>
-                    <a href="{{url_for('display', title = 'State')}}">State</a>
-                    <a href="{{url_for('display', title = 'Industry')}}">Industry</a>
-                    <a href="{{url_for('display', title = 'megaconsumercard')}}">Mega Consumer Card</a>
-                </nav>
-            </nav>
-        </nav>
+          <a class = "active" href="/">Home</a>
+          </nav>
+          </nav>
         <h1>Industry Wise Booking</h1>
-        <form action="">
+        <form method='POST' action="{{ url_for('analytics_type', type='booking') }}">
             <label for="industry">Choose Industry : </label>
-            <select name="industry" id="industry" size="4">
-                <option value="industry1">Industry 1</option>
-                <option value="industry2">Industry 2</option>
-                <option value="industry3">Industry 3</option>
-                <option value="industry4">Industry 4</option>
-                <option value="industry5">Industry 5</option>
-                <option value="industry6">Industry 6</option>
+            <select name="industry" id="industry">
+                {% for item in data %}
+                <option value="{{item[1]}}">{{ item[1] }}</option>
+                {% endfor %}
             </select>
             <br>
-            <input class = "submit" type="submit" value="Submit">
+            <input class = "submit" type="submit" value="View">
         </form>
+
+        {% if record==[] %}
+              <h2 style="color: white; text-align: center;">No matching records found!</h2>
+            {% endif %}
+
+        {% if record %}
+        <center>
+            <h2 style="color: white;">{{text}}</h2>
+            <div >
+      
+            <table class="table table-striped table-dark" style='width: 1100px;'>
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">Event Id</th>
+                  <th scope="col"><b>Exhibitor Name</b></th>
+                  <th scope="col"><b>Company</b></th>
+                  <th scope="col"><b>Industry</b></th>
+                  <th scope="col"><b>Total booking amt.</b></th>
+                  <th scope="col"><b>Booking date</b></th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for row in record %}
+                <tr>
+                  <th scope="row">{{row[0]}}</th>
+                  <td><b>{{ row[1] }}</b></td>
+                  <td><b>{{ row[2] }}</b></td>
+                  <td><b>{{ row[3] }}</b></td>
+                  <td><b>{{ row[4] }}</b></td>
+                  <td><b>{{ row[5] }}</b></td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+      
+          </div>
+               
+        </center>
+            
+         {% endif %}
+        
     </body>
 </html>

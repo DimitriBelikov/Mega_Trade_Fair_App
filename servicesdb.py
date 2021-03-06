@@ -184,7 +184,7 @@ class servicesdb:
 
     def retrieve_industry_wise_business(self, industry_name):
         industry_business_records, industry_event_total = [], []
-        event_fetch = ('SELECT Id FROM EVENT')
+        event_fetch = ('SELECT Id,Name FROM EVENT')
         self.dbcursor.execute(event_fetch)
         event_ids = self.dbcursor.fetchall()
 
@@ -192,18 +192,17 @@ class servicesdb:
             business_query = ('''SELECT t1.Spend
                             FROM megaconsumercard AS t1
                             JOIN booking AS t2 ON t2.Id = t1.Booking_Id
-                            JOIN exhibitor AS t3 ON t3.Industry_Id = t2.Exhibitor_Id
+                            JOIN exhibitor AS t3 ON t3.Id = t2.Exhibitor_Id
                             JOIN industry AS t4 ON  t4.Id = t3.Industry_Id
                             WHERE t4.IndustryName = %(IndustryName)s AND t1.Event_Id = %(Event_Id)s
                             ORDER BY t1.Event_id ASC''')
             
             self.dbcursor.execute(business_query,{'IndustryName': industry_name, 'Event_Id':event_id[0]})
             industry_business_records = self.dbcursor.fetchall()
-
             total_business = 0
             for record in industry_business_records:
                 total_business += record[0]
-            industry_event_total.append([event_id[0], total_business])
+            industry_event_total.append([event_id[1], total_business])
 
         return industry_event_total
 
@@ -250,3 +249,4 @@ class servicesdb:
         self.dbcursor.execute(count_query)
         no_records = self.dbcursor.fetchone()
         return no_records[0]
+

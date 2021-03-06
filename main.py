@@ -121,7 +121,7 @@ def add_country():
     if request.method=='POST':
         table = 'Country'
         name = request.form.get('name')
-        db.add_record(table, {'Country_name':name})
+        db.add_record(table, {'CountryName':name})
         return render_template('add_country.html',text='New Country added!')
     return render_template('add_country.html')
 
@@ -133,7 +133,7 @@ def add_state():
         
         name = request.form.get('name')
         country_id = request.form.get('country_id')
-        data = {'State_name':name,'Country_id':country_id}
+        data = {'StateName':name,'Country_id':country_id}
         db.add_record(table, data)
         return render_template('add_state.html',text='New State added!')
     return render_template('add_state.html')
@@ -145,7 +145,7 @@ def add_industry():
         table = 'Industry'
       
         name = request.form.get('name')
-        data = {'Industry_name':name}
+        data = {'IndustryName':name}
         db.add_record(table, data)
         return render_template('add_industry.html',text='New Industry added!')
     return render_template('add_industry.html')
@@ -269,8 +269,8 @@ def update(title):
         db.update_record(table,id, updated_data)
         return render_template('update_exhibitor.html',text='Following Exhibitor details updated!')
 
-    elif title=='ConsumerCard':
-        table = 'MegaConsumerCard' 
+    elif title=='megaconsumercard':
+        table = 'megaconsumercard' 
         id = request.form.get('Id')
         spend = request.form.get('spend')
         spend_date = request.form.get('spend_date')
@@ -311,7 +311,7 @@ def update(title):
 @app.route('/bookings')
 def bookings():
     Events = db.fetch_column_data('Event', ['Id','Name'])
-    Exhibitors = db.fetch_column_data('Exhibitor', ['Id','Name'])
+    Exhibitors = db.fetch_column_data('Exhibitor', ['Id','ExhibitorName'])
     Stalls = db.fetch_column_data('stall', ['Id','StallNo','Event_Id'], condition_name='IsBooked', condition_value=0)
     # Events = [(1,'hi',), (2, 'Hello',)]
     # Exhibitors = [(1, 'Parth',), (2, 'Samved',)]
@@ -341,9 +341,23 @@ def analytics():
         analysis_type = request.form.get('analytics-type')
         return redirect('/analytics/'+ analysis_type)
         
-@app.route('/analytics/<type>')
+@app.route('/analytics/<type>',methods=['GET','POST'])
 def analytics_type(type):
-    if type == 'booking':
-        return render_template('IndBooking.html')
+    data = db.fetch_column_data('Industry',['Id','IndustryName'])
+    if request.method=='GET':
+        if type == 'booking':
+            return render_template('IndBooking.html',data=data)
+        else:
+            return render_template('IndBusiness.html',data=data)
     else:
-        return render_template('IndBusiness.html')
+        industry = request.form.get('industry')
+        if type == 'booking':
+            record = db.retrieve_industry_bookings({'IndustryName':industry})
+            print(record)
+            return render_template('IndBooking.html',data=data,record=record,text=f'Booking data for {industry} industry:')
+        else:
+            record = db.retrieve_industry_wise_business(industry_name=industry)
+            return render_template('IndBusiness.html',data=data,record=record,text=f'Business data for {industry} industry:')
+
+
+

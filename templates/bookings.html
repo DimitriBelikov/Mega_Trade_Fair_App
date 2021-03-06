@@ -137,7 +137,7 @@
         {% if messages %}  
           {% for message in messages %}  
             <h3 style="text-align: center; color: green;">{{ message }}</h3>
-            <a href="{{url_for('display', title = 'Exhibitor')}}">See the updated Bookings Database....</a>  
+            <a href="{{url_for('analytics_type',type='booking')}}">See industry wise bookings.....</a>  
           {% endfor %}  
         {% endif %}  
       {% endwith %} 
