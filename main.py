@@ -6,8 +6,6 @@ app = Flask(__name__)
 app.secret_key = "super secret key"
 
 db = servicesdb()
-# db.connect_database()
-# db.create_table()
 
 def check_update_data(updated_data):
     for key in list(updated_data.keys()):
@@ -29,7 +27,10 @@ def add_venue():
         state_id = request.form.get('state_id')
         db.add_record(table, {'City':city, 'Address':address, 'Country_id':country_id,'State_id':state_id})
         return render_template('add_venue.html',text='New venue created!')
-    return render_template('add_venue.html')
+    else:
+        States = db.fetch_column_data('State', ['Id','StateName'])
+        Countries = db.fetch_column_data('Country', ['Id','CountryName'])
+        return render_template('add_venue.html', States=States, Countries=Countries)
 
 @app.route('/add_event',methods=['POST','GET'])
 def add_event():
@@ -43,7 +44,9 @@ def add_event():
         data = {'Name':name,'BookingStartDate':booking_date,'StartDate':event_date,'EndDate':end_date,'Venue_Id':venue_id}
         db.add_record(table, data)
         return render_template('add_event.html',text='New Event added!')
-    return render_template('add_event.html')
+    else:
+        Venue = db.fetch_column_data('Venue', ['Id', 'City'])
+        return render_template('add_event.html', Venues=Venue)
 
 
 @app.route('/add_visitor',methods=['POST','GET'])
@@ -81,8 +84,11 @@ def add_exhibitor():
         data = {'ExhibitorName':name,'EmailId':email,'PhoneNo':phone,'CompanyName':company_name,'CompanyDescription':company_description,'Address':address,'Pincode':pin,'Industry_Id':industry_id,'Country_Id':country_id,'State_Id':state_id}
         db.add_record(table, data)
         return render_template('add_exhibitor.html',text='New Exhibitor added!')
-    return render_template('add_exhibitor.html')
-
+    else:
+        Industries = db.fetch_column_data('Industry', ['Id','IndustryName'])
+        Countries = db.fetch_column_data('Country', ['Id','CountryName'])
+        States = db.fetch_column_data('State', ['Id','StateName'])
+        return render_template('add_exhibitor.html', Countries=Countries, States=States, Industries=Industries)
 
 @app.route('/add_stall',methods=['POST','GET'])
 def add_stall():
@@ -93,12 +99,13 @@ def add_stall():
         price = request.form.get('price')
         size = request.form.get('size')
         isbooked = request.form.get('isbooked')
-        event_id = request.form.get('event_id')
+        event_id = request.form.get('event')
         data = {'StallNo':stall_no,'Price':price,'StallSize':size,'IsBooked':int(isbooked),'Event_id':event_id}
         db.add_record(table, data)
         return render_template('add_stall.html',text='New Stall added!')
-    return render_template('add_stall.html')
-
+    else:
+        Events = db.fetch_column_data('Event', ['Id','Name'])
+        return render_template('add_stall.html', Events=Events)
 
 @app.route('/consumer_card',methods=['POST','GET'])
 def consumer_card():
@@ -113,8 +120,10 @@ def consumer_card():
         data = {'Spend':spend,'SpendDate':spend_date,'PaymentMode':payment_mode,'Event_Id':event_id,'Booking_Id':booking_id,'Visitor_Id':visitor_id}
         db.add_record(table, data)
         return render_template('consumer_card.html',text='New Consumer data added!')
-    return render_template('consumer_card.html')
-
+    else:
+        Events = db.fetch_column_data('Event', ['Id','Name'])
+        Visitors = db.fetch_column_data('Visitor', ['Id','FirstName', 'LastName'])
+        return render_template('consumer_card.html', Events=Events, Visitors=Visitors)
 
 @app.route('/add_country',methods=['POST','GET'])
 def add_country():
@@ -136,7 +145,9 @@ def add_state():
         data = {'StateName':name,'Country_id':country_id}
         db.add_record(table, data)
         return render_template('add_state.html',text='New State added!')
-    return render_template('add_state.html')
+    else:
+        Countries = db.fetch_column_data('Country', ['Id','CountryName'])
+        return render_template('add_state.html', Countries=Countries)
 
 
 @app.route('/add_industry',methods=['POST','GET'])
@@ -313,9 +324,6 @@ def bookings():
     Events = db.fetch_column_data('Event', ['Id','Name'])
     Exhibitors = db.fetch_column_data('Exhibitor', ['Id','ExhibitorName'])
     Stalls = db.fetch_column_data('stall', ['Id','StallNo','Event_Id'], condition_name='IsBooked', condition_value=0)
-    # Events = [(1,'hi',), (2, 'Hello',)]
-    # Exhibitors = [(1, 'Parth',), (2, 'Samved',)]
-    # Stalls = [(1,)]
     return render_template('bookings.html', Events=Events, Exhibitors=Exhibitors, Stalls=Stalls)
 
 @app.route('/add_booking', methods=['POST'])
@@ -325,7 +333,6 @@ def add_booking():
     Stall_Id = request.form.get('stall')
     TotalAmount = request.form.get('price')
     BookingDate = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
-    #print({'BookingDate': BookingDate, 'TotalAmount': TotalAmount, 'Event_Id': Event_Id, 'Exhibitor_Id': Exhibitor_Id})
     db.add_record('Booking', {'BookingDate': BookingDate, 'TotalAmount': TotalAmount, 'Event_Id': Event_Id, 'Exhibitor_Id': Exhibitor_Id})
     Booking_Id = db.get_last_insert_id()
     db.add_record('BookingStallMap', {'Booking_Id': Booking_Id, 'Event_Id': Event_Id, 'Stall_Id': Stall_Id})
@@ -353,11 +360,8 @@ def analytics_type(type):
         industry = request.form.get('industry')
         if type == 'booking':
             record = db.retrieve_industry_bookings({'IndustryName':industry})
-            print(record)
             return render_template('IndBooking.html',data=data,record=record,text=f'Booking data for {industry} industry:')
         else:
             record = db.retrieve_industry_wise_business(industry_name=industry)
             return render_template('IndBusiness.html',data=data,record=record,text=f'Business data for {industry} industry:')
-
-
 

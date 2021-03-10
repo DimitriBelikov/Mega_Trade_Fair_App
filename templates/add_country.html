@@ -14,7 +14,6 @@
     background-color: #333;
 }
 
-
 .topnav a {
     float: left;
     color: #f2f2f2;
@@ -54,6 +53,9 @@
       h2{
           color:black;
       }
+      .required{
+        color: red;
+      }
 </style>
 </head>
 <body>
@@ -69,15 +71,15 @@
             <h2>Add new country record!</h2>
         <form method="POST" action="{{ url_for('add_country') }}">
            <div class="mb-3">
-               <label for="exampleInputEmail1">Country name</label>
-               <input type="name" class="form-control" id="exampleInputName1" name="name" placeholder="Enter country name">
+               <label for="exampleInputEmail1">Country name <span class='required'>*</span></label>
+               <input type="name" class="form-control" id="exampleInputName1" name="name" placeholder="Enter country name" required>
                <small id="emailHelp" class="form-text text-muted"></small>
-             </div>
-             
-           
+            </div>
+
            <button type="submit" class="btn btn-primary">Add</button>
          </form>
-       
+         <label for="Required" class="required">* Required</label>
+         
          {% if text %}
             <h3 style="text-align: center; color: green;">{{ text }}</h3>
             <a href="{{url_for('display', title = 'Country')}}">See the updated country repository....</a>
