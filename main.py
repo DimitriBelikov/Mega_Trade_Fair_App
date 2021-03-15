@@ -26,7 +26,8 @@ def add_venue():
         country_id = request.form.get('country_id')
         state_id = request.form.get('state_id')
         db.add_record(table, {'City':city, 'Address':address, 'Country_id':country_id,'State_id':state_id})
-        return render_template('add_venue.html',text='New venue created!')
+        flash('New venue created!')
+        return redirect('/add_venue')
     else:
         States = db.fetch_column_data('State', ['Id','StateName'])
         Countries = db.fetch_column_data('Country', ['Id','CountryName'])
@@ -43,7 +44,8 @@ def add_event():
         venue_id = request.form.get('venue_id')
         data = {'Name':name,'BookingStartDate':booking_date,'StartDate':event_date,'EndDate':end_date,'Venue_Id':venue_id}
         db.add_record(table, data)
-        return render_template('add_event.html',text='New Event added!')
+        flash('New Event added!')
+        return redirect('/add_event')
     else:
         Venue = db.fetch_column_data('Venue', ['Id', 'City'])
         return render_template('add_event.html', Venues=Venue)
@@ -83,7 +85,8 @@ def add_exhibitor():
         state_id = request.form.get('state_id')
         data = {'ExhibitorName':name,'EmailId':email,'PhoneNo':phone,'CompanyName':company_name,'CompanyDescription':company_description,'Address':address,'Pincode':pin,'Industry_Id':industry_id,'Country_Id':country_id,'State_Id':state_id}
         db.add_record(table, data)
-        return render_template('add_exhibitor.html',text='New Exhibitor added!')
+        flash('New Exhibitor added!')
+        return redirect('/add_exhibitor')
     else:
         Industries = db.fetch_column_data('Industry', ['Id','IndustryName'])
         Countries = db.fetch_column_data('Country', ['Id','CountryName'])
@@ -102,7 +105,8 @@ def add_stall():
         event_id = request.form.get('event')
         data = {'StallNo':stall_no,'Price':price,'StallSize':size,'IsBooked':int(isbooked),'Event_id':event_id}
         db.add_record(table, data)
-        return render_template('add_stall.html',text='New Stall added!')
+        flash('New Stall added!')
+        return redirect('/add_stall')
     else:
         Events = db.fetch_column_data('Event', ['Id','Name'])
         return render_template('add_stall.html', Events=Events)
@@ -119,7 +123,8 @@ def consumer_card():
         visitor_id = request.form.get('visitor_id')
         data = {'Spend':spend,'SpendDate':spend_date,'PaymentMode':payment_mode,'Event_Id':event_id,'Booking_Id':booking_id,'Visitor_Id':visitor_id}
         db.add_record(table, data)
-        return render_template('consumer_card.html',text='New Consumer data added!')
+        flash('New Consumer data added!')
+        return redirect('/consumer_card')
     else:
         Events = db.fetch_column_data('Event', ['Id','Name'])
         Visitors = db.fetch_column_data('Visitor', ['Id','FirstName', 'LastName'])
@@ -144,7 +149,8 @@ def add_state():
         country_id = request.form.get('country_id')
         data = {'StateName':name,'Country_id':country_id}
         db.add_record(table, data)
-        return render_template('add_state.html',text='New State added!')
+        flash('New State added!')
+        return redirect('/add_state')
     else:
         Countries = db.fetch_column_data('Country', ['Id','CountryName'])
         return render_template('add_state.html', Countries=Countries)
@@ -337,7 +343,7 @@ def add_booking():
     Booking_Id = db.get_last_insert_id()
     db.add_record('BookingStallMap', {'Booking_Id': Booking_Id, 'Event_Id': Event_Id, 'Stall_Id': Stall_Id})
     db.update_record('Stall', Id=Stall_Id, updated_data={'IsBooked': 1})
-    flash('DONE')
+    flash('New Booking Added !!!')
     return redirect('/bookings')    
 
 @app.route('/analytics', methods=['GET','POST'])

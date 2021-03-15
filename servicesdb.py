@@ -11,9 +11,9 @@ class servicesdb:
         self.connector = mysql.connect(host='127.0.0.1', user='root', password='Urmil@2000')
 
         self.dbcursor = self.connector.cursor()
-        #self.dbcursor.execute('CREATE DATABASE IF NOT EXISTS MegaTradeFair')
-        #self.dbcursor.execute('USE MegaTradeFair')
-        self.dbcursor.execute('USE test')
+        self.dbcursor.execute('CREATE DATABASE IF NOT EXISTS MegaTradeFair')
+        self.dbcursor.execute('USE MegaTradeFair')
+        #self.dbcursor.execute('USE test')
 
     def create_table(self):
         self.dbcursor.execute(''' CREATE TABLE IF NOT EXISTS Country(

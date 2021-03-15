@@ -151,10 +151,14 @@
            <button type="submit" class="btn btn-primary">Add</button>
          </form>
          <label for="Required" class="required">* Required</label>
-         {% if text %}
-            <h3 style="text-align: center; color: green;">{{ text }}</h3>
-            <a href="{{url_for('display', title = 'Event')}}">See the updated event repository....</a>
-         {% endif %}
+         {% with messages = get_flashed_messages() %}  
+          {% if messages %}  
+            {% for message in messages %} 
+              <h3 style="text-align: center; color: green;">{{ message }}</h3>
+              <a href="{{url_for('display', title = 'Event')}}">See the updated Event repository....</a>
+            {% endfor %}  
+          {% endif %}  
+         {% endwith %} 
        
        </div>
        </center>

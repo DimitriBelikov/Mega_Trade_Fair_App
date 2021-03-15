@@ -138,10 +138,14 @@
          </form>
          <label for="Required" class="required">* Required</label>
          
-         {% if text %}
-            <h3 style="text-align: center; color: green;">{{ text }}</h3>
-            <a href="{{url_for('display', title = 'State')}}">See the updated state repository....</a>
-         {% endif %}
+         {% with messages = get_flashed_messages() %}  
+          {% if messages %}  
+            {% for message in messages %} 
+              <h3 style="text-align: center; color: green;">{{ message }}</h3>
+              <a href="{{url_for('display', title = 'State')}}">See the updated state repository....</a>
+            {% endfor %}  
+          {% endif %}  
+         {% endwith %} 
        </center>
     
 </body>
