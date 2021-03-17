@@ -71,18 +71,18 @@
             <div class="mb-3">
                 <label for="id">Id</label><br>
                 <select id="Id" name="Id">
-                  <option value={{ID}}>{{ID}}</option>
+                  <option value="{{ID}}">{{ ID }}</option>
                 </select>
               </div>
           
            <div class="mb-3">
                <label for="exampleInputEmail1">State name</label>
-               <input type="name" class="form-control" id="exampleInputName1" name="name" placeholder="Enter state name">
+               <input type="name" class="form-control" id="exampleInputName1" name="name" placeholder="{{ State[1] }}">
                <small id="emailHelp" class="form-text text-muted"></small>
              </div>
              <div class="mb-3">
                 <label for="exampleInputEmail1">Country ID</label>
-                <input type="number" class="form-control" id="exampleInputEmail1" name="country_id" placeholder="Enter country id">
+                <input type="number" class="form-control" id="exampleInputEmail1" name="country_id" placeholder="{{ State[2] }}">
                 <small id="emailHelp" class="form-text text-muted"></small>
               </div>
              
@@ -90,10 +90,14 @@
            <button type="submit" class="btn btn-primary">Update</button>
          </form>
        
-         {% if text %}
-            <h3 style="text-align: center; color: green;">{{ text }}</h3>
-            <a href="{{url_for('display', title = 'State')}}">See the updated state repository....</a>
-         {% endif %}
+         {% with messages = get_flashed_messages() %}  
+          {% if messages %}  
+            {% for message in messages %}
+            <h3 style="text-align: center; color: green;">{{ message }}</h3>
+            <a href="{{url_for('display', title = 'State')}}">See the updated State repository....</a>
+            {% endfor %}  
+          {% endif %}  
+         {% endwith %}
        </center>
     
 </body>

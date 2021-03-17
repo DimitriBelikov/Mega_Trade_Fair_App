@@ -75,17 +75,17 @@
               </div>
            <div class="mb-3">
                <label for="exampleInputEmail1">Stall No.</label>
-               <input type="number" class="form-control" id="exampleInputName1" name="stall_no" placeholder="Enter stall no.">
+               <input type="number" class="form-control" id="exampleInputName1" name="stall_no" placeholder="{{ Stall[1] }}">
                <small id="emailHelp" class="form-text text-muted"></small>
              </div>
              <div class="mb-3">
                <label for="exampleInputEmail1">Price</label>
-               <input type="float" class="form-control" id="exampleInputEmail1" name="price" placeholder="Enter price of the stall"><br>
+               <input type="float" class="form-control" id="exampleInputEmail1" name="price" placeholder="{{ Stall[2] }}"><br>
                <small id="emailHelp" class="form-text text-muted"></small>
              </div>
              <div class="mb-3">
                <label for="exampleInputEmail1">Stall Size(Area)</label>
-               <input type="number" class="form-control" id="exampleInputEmail1" name="size" placeholder="Enter stall size(meters square)">
+               <input type="number" class="form-control" id="exampleInputEmail1" name="size" placeholder="{{ Stall[3] }}">
                <small id="emailHelp" class="form-text text-muted"></small>
              </div>
              <div class="mb-3">
@@ -97,7 +97,7 @@
               </div>
              <div class="mb-3">
                <label for="exampleInputEmail1">Event ID</label>
-               <input type="number" class="form-control" id="exampleInputEmail1"  name="event_id" placeholder="Enter event id this stall belongs to">
+               <input type="number" class="form-control" id="exampleInputEmail1"  name="event_id" placeholder="{{ Stall[5] }}">
                <small id="emailHelp" class="form-text text-muted"></small>
              </div>
              
@@ -105,10 +105,14 @@
            <button type="submit" class="btn btn-primary">Update</button>
          </form>
        
-         {% if text %}
-            <h3 style="text-align: center; color: green;">{{ text }}</h3>
+         {% with messages = get_flashed_messages() %}  
+          {% if messages %}  
+            {% for message in messages %}
+            <h3 style="text-align: center; color: green;">{{ message }}</h3>
             <a href="{{url_for('display', title = 'Stall')}}">See the updated stall repository....</a>
-         {% endif %}
+            {% endfor %}  
+          {% endif %}  
+         {% endwith %}
        
        </div>
        </center>

@@ -122,7 +122,7 @@
              </div>
              <div class="mb-3">
                <label for="exampleInputEmail1">Spend date <span class='required'>*</span> </label>
-               <input type="datetime" class="form-control" id="exampleInputEmail1" name="spend_date" placeholder="Enter Date" required>
+               <input type="datetime-local" class="form-control" id="exampleInputEmail1" name="spend_date" placeholder="Enter Date" required>
                <small id="emailHelp" class="form-text text-muted"></small>
              </div>
              <div class="mb-3">
@@ -132,7 +132,7 @@
                 <option class="option-css" value="Card">1. Card</option>
                 <option class="option-css" value="Cheque">2. Cheque</option>
                 <option class="option-css" value="Cash">3. Cash</option>
-                <option class="option-css" value="PAYTM">4. Online Payment (GPAY, PAYTM...)</option>
+                <option class="option-css" value="Online Payment (GPAY, PAYTM...)">4. Online Payment (GPAY, PAYTM...)</option>
               </select>
             </div>
              <div class="mb-3">
@@ -148,19 +148,25 @@
              </div>
              <div class="mb-3">
                 <label for="exampleInputEmail1">Booking ID <span class='required'>*</span> </label>
-                <input type="number" class="form-control" id="exampleInputEmail1"  name="booking_id" placeholder="Enter booking id" required>
+                <br>
+                <select class='select-css stretch' name="booking_id" required>
+                <option class="option-css" value=""> Select Booking_Id: </option>
+                {% for booking in Bookings %}
+                  <option class="option-css" value="{{ booking[0] }}"> {{ booking[0] }} </option>
+                {% endfor %}
+                </select>
                 <small id="emailHelp" class="form-text text-muted"></small>
               </div>
              
               <div class="mb-3">
                 <label for="exampleInputEmail1">Visitor ID <span class='required'>*</span> </label>
                 <br>
-               <select class='select-css stretch' name="visitor_id" required>
+                <select class='select-css stretch' name="visitor_id" required>
                 <option class="option-css" value=""> Select Visitor: </option>
                 {% for visitor in Visitors %}
                   <option class="option-css" value="{{ visitor[0] }}"> {{ visitor[0] }} : {{ visitor[1] }} {{visitor[2]}} </option>
                 {% endfor %}
-               </select>
+                </select>
                 <small id="emailHelp" class="form-text text-muted"></small>
               </div>
           

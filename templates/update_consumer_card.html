@@ -53,6 +53,39 @@
       h2{
           color:black;
       }
+  .select-css {
+    display: block;
+    font-size: 16px;
+    font-family: sans-serif;
+    font-weight: 700;
+    color: #444;
+    line-height: 1.3;
+    padding: .6em 1.4em .5em .8em;
+    width: 70%;
+    max-width: 100%; /* useful when width is set to anything other than 100% */
+    box-sizing: border-box;
+    margin: 0;
+    border: 1px solid #aaa;
+    box-shadow: 0 1px 0 1px rgba(0,0,0,.04);
+    border-radius: .5em;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: #fff;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'),
+    linear-gradient(to bottom, #ffffff 0%,#e5e5e5 100%);
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+  }
+  
+  .select-css::-ms-expand {
+  display: none;
+  }
+
+  .select-css:hover {
+  border-color: #888;
+  }
 </style>
 </head>
 <body>
@@ -70,44 +103,44 @@
             <div class="mb-3">
                 <label for="id">Id</label><br>
                 <select id="Id" name="Id">
-                  <option value={{ID}}>{{ID}}</option>
+                  <option value={{ID}}>{{ ID }}</option>
                 </select>
               </div>
            
              <div class="mb-3">
                <label for="exampleInputEmail1">Spend</label>
-               <input type="integer" class="form-control" id="exampleInputEmail1" name="spend" placeholder="Enter Rs. spent"><br>
+               <input type="integer" class="form-control" id="exampleInputEmail1" name="spend" placeholder="{{ CC[1] }}"><br>
                <small id="emailHelp" class="form-text text-muted"></small>
              </div>
              <div class="mb-3">
                <label for="exampleInputEmail1">Spend date</label>
-               <input type="datetime" class="form-control" id="exampleInputEmail1" name="spend_date" placeholder="Enter pin">
+               <input type="text" class="form-control" id="exampleInputEmail1" name="spend_date" placeholder="{{ CC[2] }}" onfocus="(this.type='datetime-local')" onblur="(this.type='text')">
                <small id="emailHelp" class="form-text text-muted"></small>
              </div>
              <div class="mb-3">
               <label for="colum">Payment Mode</label><br>
-              <select id="name" name="payment_mode">
-                <option value="Card">Card</option>
-                <option value="Chequeue">Chequeue</option>
-                <option value="Cash">Cash</option>
-                <option value="PAYTM">PAYTM</option>
-                <option value="Gpay">Gpay</option>
+              <select id="name" class="select-css" name="payment_mode">
+                <option class="option-css" value="">Select Payment Mode:</option>
+                <option class="option-css" value="Card">1. Card</option>
+                <option class="option-css" value="Cheque">2. Cheque</option>
+                <option class="option-css" value="Cash">3. Cash</option>
+                <option class="option-css" value="Online Payment (GPAY, PAYTM...)">4. Online Payment (GPAY, PAYTM...)</option>
               </select>
             </div>
              <div class="mb-3">
                <label for="exampleInputEmail1">Event ID</label>
-               <input type="number" class="form-control" id="exampleInputEmail1"  name="event_id" placeholder="Enter event id">
+               <input type="number" class="form-control" id="exampleInputEmail1"  name="event_id" placeholder="{{ CC[4] }}">
                <small id="emailHelp" class="form-text text-muted"></small>
              </div>
              <div class="mb-3">
                 <label for="exampleInputEmail1">Booking ID</label>
-                <input type="number" class="form-control" id="exampleInputEmail1"  name="booking_id" placeholder="Enter booking id">
+                <input type="number" class="form-control" id="exampleInputEmail1"  name="booking_id" placeholder="{{ CC[5] }}">
                 <small id="emailHelp" class="form-text text-muted"></small>
               </div>
              
               <div class="mb-3">
                 <label for="exampleInputEmail1">Visitor ID</label>
-                <input type="number" class="form-control" id="exampleInputEmail1"  name="visitor_id" placeholder="Enter visitor id">
+                <input type="number" class="form-control" id="exampleInputEmail1"  name="visitor_id" placeholder="{{ CC[6] }}">
                 <small id="emailHelp" class="form-text text-muted"></small>
               </div>
               
@@ -116,10 +149,14 @@
            <button type="submit" class="btn btn-primary">Update</button>
          </form>
        
-         {% if text %}
-            <h3 style="text-align: center; color: green;">{{ text }}</h3>
-            <a href="{{url_for('display', title = 'megaconsumercard')}}">See the updated consumer_card repository....</a>
-         {% endif %}
+         {% with messages = get_flashed_messages() %}  
+          {% if messages %}  
+            {% for message in messages %}
+            <h3 style="text-align: center; color: green;">{{ message }}</h3>
+            <a href="{{url_for('display', title = 'megaconsumercard')}}">See the updated Consumer Card repository....</a>
+            {% endfor %}  
+          {% endif %}  
+         {% endwith %}
        
        </div>
        </center>

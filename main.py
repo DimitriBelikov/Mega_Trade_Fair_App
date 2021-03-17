@@ -128,7 +128,8 @@ def consumer_card():
     else:
         Events = db.fetch_column_data('Event', ['Id','Name'])
         Visitors = db.fetch_column_data('Visitor', ['Id','FirstName', 'LastName'])
-        return render_template('consumer_card.html', Events=Events, Visitors=Visitors)
+        Bookings = db.fetch_column_data('Booking',['Id'])
+        return render_template('consumer_card.html', Events=Events, Visitors=Visitors, Bookings=Bookings)
 
 @app.route('/add_country',methods=['POST','GET'])
 def add_country():
@@ -195,23 +196,32 @@ def display(title):
 def update_get(title,ID):
 
     if title=='Venue':
-        return render_template('update_venue.html', ID=ID)
+        Venue_data = db.fetch_column_data('Venue', ['all'], 'Id', ID)[0]
+        return render_template('update_venue.html', ID=ID, Venue=Venue_data)
     elif title=='Event':
-        return render_template('update_event.html', ID=ID)
+        Event_data = db.fetch_column_data('Event', ['all'], 'Id', ID)[0]
+        return render_template('update_event.html', ID=ID, Event=Event_data)
     elif title=='Stall':
-        return render_template('update_stall.html', ID=ID)
+        Stall_data = db.fetch_column_data('Stall', ['all'], 'Id', ID)[0]
+        return render_template('update_stall.html', ID=ID, Stall=Stall_data)
     elif title=='Visitor':
-        return render_template('update_visitor.html', ID=ID)
+        Visitor_data = db.fetch_column_data('Visitor', ['all'], 'Id', ID)[0]
+        return render_template('update_visitor.html', ID=ID, Visitor=Visitor_data)
     elif title =='Exhibitor':
-        return render_template('update_exhibitor.html', ID=ID)
-    elif title=='ConsumerCard':
-        return render_template('update_consumer_card.html', ID=ID)
+        Exhibitor_data = db.fetch_column_data('Exhibitor', ['all'], 'Id', ID)[0]
+        return render_template('update_exhibitor.html', ID=ID, Exhibitor=Exhibitor_data)
+    elif title=='megaconsumercard':
+        CC_data = db.fetch_column_data('MegaConsumerCard', ['all'], 'Id', ID)[0]
+        return render_template('update_consumer_card.html', ID=ID, CC=CC_data)
     elif title=='Country':
-        return render_template('update_country.html', ID=ID)
+        Country_data = db.fetch_column_data('Country', ['all'], 'Id', ID)[0]
+        return render_template('update_country.html', ID=ID, Country=Country_data)
     elif title=='State':
-        return render_template('update_state.html', ID=ID)
-    else:
-        return render_template('update_industry.html', ID=ID)
+        State_data = db.fetch_column_data('State', ['all'], 'Id', ID)[0]
+        return render_template('update_state.html', ID=ID, State=State_data)
+    elif title=='Industry':
+        Industry_data = db.fetch_column_data('Industry', ['all'], 'Id', ID)[0]
+        return render_template('update_industry.html', ID=ID, Industry=Industry_data)
 
 @app.route('/update/<title>',methods=['POST'])
 def update(title):
@@ -224,7 +234,8 @@ def update(title):
         state_id = request.form.get('state_id')
         updated_data = check_update_data({'City':city, 'Address':address, 'Country_id':country_id,'State_id':state_id})
         db.update_record(table, id, updated_data)
-        return render_template('update_venue.html',text='Following Venue updated!')
+        flash('Following Venue updated!')
+        return redirect(url_for('update_get', title=table, ID=id))
             
     elif title=='Event':
         table = 'Event'
@@ -237,7 +248,9 @@ def update(title):
         updated_data = check_update_data({'Name':name,'BookingStartDate':booking_date,'StartDate':event_date,'EndDate':end_date,
                                         'Venue_Id':venue_id})
         db.update_record(table,id, updated_data)
-        return render_template('update_event.html',text='Following event updated!')
+        print(updated_data)
+        flash('Following Event updated!')
+        return redirect(url_for('update_get', title=table, ID=id))
 
     elif title=='Stall':
         table = 'Stall'
@@ -248,8 +261,10 @@ def update(title):
         isbooked = request.form.get('isbooked')
         event_id = request.form.get('event_id')
         updated_data = check_update_data({'StallNo':stall_no,'Price':price,'StallSize':size,'IsBooked':int(isbooked),'Event_id':event_id})
+        print(updated_data)
         db.update_record(table,id, updated_data)
-        return render_template('update_stall.html',text='Following stall updated!')
+        flash('Following Stall Updated!!')
+        return redirect(url_for('update_get', title='Stall', ID=id))
         
     elif title=='Visitor':
         table = 'Visitor'
@@ -260,12 +275,14 @@ def update(title):
         pin = request.form.get('pin')
         phone = request.form.get('phone')
         email = request.form.get('email')
-        DOB = request.form.get('DOB')
+        DOB = request.form.get('dob')
         gender = request.form.get('gender')
         updated_data = check_update_data({'FirstName':fname,'LastName':lname,'Address':address,'Pincode':pin,'MobileNo':phone,
                                             'EmailId':email,'DateOfBirth':DOB,'Gender':int(gender)})
+        print(updated_data)
         db.update_record(table,id, updated_data)
-        return render_template('update_visitor.html',text='Following visitor details updated!')
+        flash('Following Visitor updated!')
+        return redirect(url_for('update_get', title=table, ID=id))
 
     elif title =='Exhibitor':
         table = 'Exhibitor' 
@@ -284,7 +301,8 @@ def update(title):
                             'CompanyDescription':company_description,'Address':address,'Pincode':pin,'Industry_Id':industry_id,
                             'Country_Id':country_id, 'State_Id':state_id})
         db.update_record(table,id, updated_data)
-        return render_template('update_exhibitor.html',text='Following Exhibitor details updated!')
+        flash('Following Exhibitor updated!')
+        return redirect(url_for('update_get', title=table, ID=id))
 
     elif title=='megaconsumercard':
         table = 'megaconsumercard' 
@@ -298,7 +316,8 @@ def update(title):
         updated_data = check_update_data({'Spend':spend,'SpendDate':spend_date,'PaymentMode':payment_mode,'Event_Id':event_id,
                                 'Booking_Id':booking_id,'Visitor_Id':visitor_id})
         db.update_record(table,id, updated_data)
-        return render_template('update_consumer_card.html',text='Consumer data updated!')
+        flash('Following Consumer Card updated!')
+        return redirect(url_for('update_get', title=table, ID=id))
 
     elif title=='Country':
         table = 'Country'
@@ -306,24 +325,27 @@ def update(title):
         name = request.form.get('name')
         updated_data = check_update_data({'CountryName':name})
         db.update_record(table,id, updated_data)
-        return render_template('update_country.html',text='Country details updated!')
+        flash('Following Country updated!')
+        return redirect(url_for('update_get', title=table, ID=id))
 
     elif title=='State':
         table = 'State'
-        Id = request.form.get('Id')
+        id = request.form.get('Id')
         name = request.form.get('name')
         country_id = request.form.get('country_id')
         updated_data = check_update_data({'StateName':name,'Country_id':country_id})
-        db.update_record(table,Id, updated_data)
-        return render_template('update_state.html',text='State details updated!')
+        db.update_record(table,id, updated_data)
+        flash('Following State updated!')
+        return redirect(url_for('update_get', title=table, ID=id))
 
     elif title=='Industry':
         table = 'Industry'
-        Id = request.form.get('Id')
+        id = request.form.get('Id')
         name = request.form.get('name')
         updated_data = check_update_data({'IndustryName':name})
-        db.update_record(table,Id, updated_data)
-        return render_template('update_industry.html',text='Industry details updated!')
+        db.update_record(table,id, updated_data)
+        flash('Following Industry updated!')
+        return redirect(url_for('update_get', title=table, ID=id))
         
 @app.route('/bookings')
 def bookings():
@@ -337,7 +359,7 @@ def add_booking():
     Event_Id = request.form.get('event')
     Exhibitor_Id = request.form.get('exhibitor')
     Stall_Id = request.form.get('stall')
-    TotalAmount = request.form.get('price')
+    TotalAmount = db.fetch_column_data('Stall', ['Price'], 'Id', Stall_Id)[0][0]
     BookingDate = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     db.add_record('Booking', {'BookingDate': BookingDate, 'TotalAmount': TotalAmount, 'Event_Id': Event_Id, 'Exhibitor_Id': Exhibitor_Id})
     Booking_Id = db.get_last_insert_id()
@@ -358,16 +380,19 @@ def analytics():
 def analytics_type(type):
     data = db.fetch_column_data('Industry',['Id','IndustryName'])
     if request.method=='GET':
-        if type == 'booking':
+        if type == 'industrybooking':
             return render_template('IndBooking.html',data=data)
-        else:
+        elif type == 'industrybusiness':
             return render_template('IndBusiness.html',data=data)
+        else:
+            record = db.retrieve_allindustry_bookings()
+            return render_template('AllIndustryBookings.html', record=record)
     else:
         industry = request.form.get('industry')
-        if type == 'booking':
+        if type == 'industrybooking':
             record = db.retrieve_industry_bookings({'IndustryName':industry})
             return render_template('IndBooking.html',data=data,record=record,text=f'Booking data for {industry} industry:')
-        else:
+        elif type == 'industrybusiness':
             record = db.retrieve_industry_wise_business(industry_name=industry)
             return render_template('IndBusiness.html',data=data,record=record,text=f'Business data for {industry} industry:')
 

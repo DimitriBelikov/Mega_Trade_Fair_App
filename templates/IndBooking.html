@@ -56,7 +56,7 @@
           </nav>
           </nav>
         <h1>Industry Wise Booking</h1>
-        <form method='POST' action="{{ url_for('analytics_type', type='booking') }}">
+        <form method='POST' action="{{ url_for('analytics_type', type='industrybooking') }}">
             <label for="industry">Choose Industry : </label>
             <select name="industry" id="industry">
                 {% for item in data %}
@@ -80,6 +80,7 @@
               <thead class="thead-dark">
                 <tr>
                   <th scope="col">Event Id</th>
+                  <th scope="col"><b>Stall No.</b></th>
                   <th scope="col"><b>Exhibitor Name</b></th>
                   <th scope="col"><b>Company</b></th>
                   <th scope="col"><b>Industry</b></th>
@@ -90,12 +91,13 @@
               <tbody>
               {% for row in record %}
                 <tr>
-                  <th scope="row">{{row[0]}}</th>
+                  <th><b>{{ row[0] }}</b></th>
                   <td><b>{{ row[1] }}</b></td>
                   <td><b>{{ row[2] }}</b></td>
                   <td><b>{{ row[3] }}</b></td>
                   <td><b>{{ row[4] }}</b></td>
                   <td><b>{{ row[5] }}</b></td>
+                  <td><b>{{ row[6] }}</b></td>
                 </tr>
               {% endfor %}
               </tbody>

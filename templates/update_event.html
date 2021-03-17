@@ -70,32 +70,32 @@
             <div class="mb-3">
                 <label for="id">Id:</label><br>
                 <select id="Id" name="Id">
-                  <option value={{Contact_id}}>{{Contact_id}}</option>
+                  <option value={{ID}}>{{ ID }}</option>
                 </select>
               </div>
              <div class="mb-3">
                <label for="exampleInputEmail1">Name</label>
-               <input type="text" class="form-control" id="exampleInputEmail1" name="name" placeholder="Enter Event name"><br>
+               <input type="text" class="form-control" id="exampleInputEmail1" name="name" placeholder="{{ Event[1] }}"><br>
                <small id="emailHelp" class="form-text text-muted"></small>
              </div>
              <div class="mb-3">
                <label for="exampleInputEmail1">Booking start date</label>
-               <input type="datetime" class="form-control" id="exampleInputEmail1" name="booking_date" placeholder="YYYY-MM-DD hh:mm:ss">
+               <input type="text" class="form-control" id="exampleInputEmail1" name="booking_date" placeholder="{{ Event[2] }}" onfocus="(this.type='datetime-local')" onblur="(this.type='text')">
                <small id="emailHelp" class="form-text text-muted"></small>
              </div>
              <div class="mb-3">
                <label for="exampleInputEmail1">Event start date</label>
-               <input type="datetime" class="form-control" id="exampleInputEmail1" name="event_date" placeholder="YYYY-MM-DD hh:mm:ss">
+               <input type="text" class="form-control" id="exampleInputEmail1" name="event_date" placeholder="{{ Event[3] }}" onfocus="(this.type='datetime-local')" onblur="(this.type='text')">
                <small id="emailHelp" class="form-text text-muted"></small>
              </div>
              <div class="mb-3">
                <label for="exampleInputEmail1">End date</label>
-               <input type="datetime" class="form-control" id="exampleInputEmail1"  name="end_date" placeholder="YYYY-MM-DD hh:mm:ss">
+               <input type="text" class="form-control" id="exampleInputEmail1"  name="end_date" placeholder="{{ Event[4] }}" onfocus="(this.type='datetime-local')" onblur="(this.type='text')">
                <small id="emailHelp" class="form-text text-muted"></small>
              </div>
              <div class="mb-3">
                 <label for="exampleInputEmail1">Venue ID</label>
-                <input type="number" class="form-control" id="exampleInputEmail1" name="id" placeholder="Enter venue id of event">
+                <input type="number" class="form-control" id="exampleInputEmail1" name="venue_id" placeholder="{{ Event[5] }}">
                 <small id="emailHelp" class="form-text text-muted"></small>
               </div>
              
@@ -103,10 +103,14 @@
            <button type="submit" class="btn btn-primary">Update</button>
          </form>
        
-         {% if text %}
-            <h3 style="text-align: center; color: green;">{{ text }}</h3>
-            <a href="{{url_for('display', title = 'Event')}}">See the updated event repository....</a>
-         {% endif %}
+         {% with messages = get_flashed_messages() %}  
+          {% if messages %}  
+            {% for message in messages %}
+            <h3 style="text-align: center; color: green;">{{ message }}</h3>
+            <a href="{{url_for('display', title = 'Event')}}">See the updated Event repository....</a>
+            {% endfor %}  
+          {% endif %}  
+         {% endwith %}
        
        </div>
        </center>

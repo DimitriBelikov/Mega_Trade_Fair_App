@@ -171,11 +171,14 @@ class servicesdb:
 
     def retrieve_industry_bookings(self, industry_name):
         records = []
-        industry_booking_query = (''' SELECT t1.Event_Id, t2.ExhibitorName, t2.CompanyName, t3.IndustryName, t1.TotalAmount, t1.BookingDate
+
+        industry_booking_query = (''' SELECT t1.Event_Id, t5.StallNo, t2.ExhibitorName, t2.CompanyName, t3.IndustryName, t1.TotalAmount, t1.BookingDate 
                             FROM booking AS t1
                             JOIN exhibitor AS t2 ON t1.Exhibitor_Id = t2.Id
+                            JOIN bookingstallmap AS t4 ON t4.Booking_Id = t1.Id
+                            JOIN stall AS t5 ON t5.Id = t4.Stall_Id
                             JOIN industry AS t3 ON t2.Industry_Id = t3.Id WHERE t3.IndustryName = %(IndustryName)s
-                            ORDER BY t1.Event_Id ASC ''')
+                            ORDER BY t1.Event_Id ASC''')
 
         self.dbcursor.execute(industry_booking_query, industry_name)
         records = self.dbcursor.fetchall()
@@ -226,6 +229,8 @@ class servicesdb:
 
     def fetch_column_data(self, table_name, columns, condition_name=None, condition_value=None):
         fetch_query = 'SELECT '
+        if columns[0].lower() == 'all':
+            columns = ['*']
 
         for i,column in enumerate(columns):
             if i < len(columns)-1:
@@ -249,4 +254,18 @@ class servicesdb:
         self.dbcursor.execute(count_query)
         no_records = self.dbcursor.fetchone()
         return no_records[0]
+
+    def retrieve_allindustry_bookings(self):
+        industry_book_data = []
+
+        industry_query = ('SELECT IndustryName FROM Industry')
+        self.dbcursor.execute(industry_query)
+        industries = self.dbcursor.fetchall()
+
+        for industry in industries:
+            records = self.retrieve_industry_bookings({'IndustryName': industry[0]})
+            for record in records:
+                industry_book_data.append(record)
+        
+        return industry_book_data
 
